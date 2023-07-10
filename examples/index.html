@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta my-app-id="a123">
+    <title>Stat Test 监控测试</title>
+    <!-- 同步加载 -->
+    <!-- <script src="../xxx.js"></script>
+    <script>
+        window.MyCliMonitor.collect()
+        window.MyCliMonitor.upload()
+    </script> -->
+
+    <!-- 异步加载 -->
+    <!-- <script>
+        (function(){
+            const script = document.createElmenet('script')
+            script.src = 'xxx/xxx.js'
+            const body = document.body
+            body.insertBefore(script, body.firstChild)
+            script.onload = function() {
+                var event = new CustomEvent('onMonitorScriptLoad')
+                window.dispatchEvent(event)
+            }
+        })()
+    </script> -->
+</head>
+<body my-page-id="b123">
+    <script>
+        // window.addEventListener('onMonitorScriptLoad', function() {
+        //     window.MyCliMonitor.sendPV()
+        //     window.MyCliMonitor.collect()
+        //     window.MyCliMonitor.upload()
+        // })
+        window.onload = function() {
+            const monitor = window.MyCliMonitor
+            monitor.registerBeforeCreateParams(function(){
+                console.log('before create params')
+            })
+            monitor.registerBeforeUpload(function(params){
+                return params + '&custom=1'
+            })
+            monitor.registerAfterUpload(function(url, data){
+                console.log('after upload ',url ,data)
+            })
+            monitor.registerOnError(function(e){
+                console.log('errorMessage:', e)
+            })
+            monitor.sendPV()
+        }
+    </script>
+</body>
+</html>
