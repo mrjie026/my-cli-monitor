@@ -25,14 +25,50 @@
             }
         })()
     </script> -->
+    <script>
+        function addDom(){
+            const body = document.body
+            const div = document.createElement('div')
+            div.innerHTML = '前端监控 SDK'
+            div.style = 'background-color: red'
+            div.className = 'new-dom'
+            div.setAttribute('appear', '')
+            body.insertBefore(div, body.firstChild)
+            window.MyCliMonitor.collectAppear() // 刷新 appear 监听列表
+        }
+        function onJump(){
+            setTimeout(() => {
+                window.MyCliMonitor.sendClick({
+                    jumpUrl:'www.baidu.com',
+                })
+            }, 1000);
+        }
+        function jump(){
+            const dom = document.querySelector('.jump')
+            window.location.href = 'http://www.qq.com'
+            window.MyCliMonitor.sendClick({
+                jumpUrl:'https://www.qq.com',
+                target: dom.className
+            })
+        }
+    </script>
 </head>
 <body my-page-id="b123">
+    <a href="http://www.baidu.com" onClick="onJump()">跳转上报</a>
+    <div class="jump" onClick="jump()">上报--QQ</div>
+    <!-- 曝光埋点：由不可见变为可见（最初未渲染） -->
+    <button onClick="addDom()">添加 DOM</button>
+    <!-- 曝光埋点：由不可见变为可见（渲染未显示） -->
+    <div style="background: #ff0000;height:2000px"></div>
+    <div class="demo2" style="background: #ff0;height:200px" appear></div>
     <script>
-        // window.addEventListener('onMonitorScriptLoad', function() {
-        //     window.MyCliMonitor.sendPV()
-        //     window.MyCliMonitor.collect()
-        //     window.MyCliMonitor.upload()
-        // })
+        document.getElementsByClassName('demo2')[0].addEventListener('onAppear', function(e){
+            // console.log('demo2  onAppear')
+            window.MyCliMonitor.sendExp({a: 1, b:2, c:3})
+        })
+        document.getElementsByClassName('demo2')[0].addEventListener('onDisAppear', function(e){
+            console.log('demo2  onDisAppear')
+        })
         window.onload = function() {
             const monitor = window.MyCliMonitor
             monitor.registerBeforeCreateParams(function(){
