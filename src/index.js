@@ -6,10 +6,10 @@ const disappearEvent = new CustomEvent('onDisAppear')
 const ob = new IntersectionObserver(function(e) {
     e.forEach(d => {
         if(d.intersectionRatio > 0){
-            console.log(d.target.className + ' appear')
+            // console.log(d.target.className + ' appear')
             d.target.dispatchEvent(appearEvent)
         }else{
-            console.log(d.target.className + ' disappear!')
+            // console.log(d.target.className + ' disappear!')
             d.target.dispatchEvent(disappearEvent)
         }
     })
@@ -18,10 +18,9 @@ const appear = document.querySelectorAll('[appear]')
 for(let i = 0; i < appear.length; i++) {
     ob.observe(appear[i])
 }
-
-window.onload = function() {
+window.addEventListener('onload', function() {
     collectAppear()
-}
+})
 
 window.MyCliMonitor = {
     // collect,

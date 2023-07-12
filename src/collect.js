@@ -32,18 +32,18 @@ function collect(customData, eventType){
     ua = window.navigator.userAgent
     currentUrl = window.location.href
     // console.log(appId, pageId, timestamp, ua)
-    let data = `appId=${appId}&pageId=${pageId}&timestamp=${timestamp}&ua=${ua}&eventType=${eventType}`
-    const params = {appId, pageId, timestamp, ua, url: currentUrl, ...customData}
-    data = qs.stringify(params)
+    // let data = `appId=${appId}&pageId=${pageId}&timestamp=${timestamp}&ua=${ua}&eventType=${eventType}`
+    const params = {appId, pageId, timestamp, ua, url: currentUrl, args: JSON.stringify(customData)}
+    let data = qs.stringify(params)
     console.log('qsData', data)
+    
     if(beforeUpload){
         data = beforeUpload(data)
     }
     // 日志上报
     let url, uploadData
     try{
-        // data = {...customData, data}
-        const res = upload(data)
+        const res = upload(data, {eventType})
         url = res.url
         uploadData = res.data
         // throw new Error('test')
@@ -59,6 +59,7 @@ export function sendPV() {
 }
 // 上报曝光埋点
 export function sendExp(data) {
+    console.log('sendExp --- ', data)
     collect(data, 'EXP')
 }
 // 上报点击埋点
